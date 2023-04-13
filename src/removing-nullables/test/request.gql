@@ -1,0 +1,18 @@
+query testQuery {
+    media {
+        ...on Book {
+            bookName: name
+            author {
+                ...PersonFragment
+            }
+        }
+
+        ...on Movie {
+            movieName: name
+        }
+    }
+}
+
+fragment PersonFragment on Person {
+    name
+}

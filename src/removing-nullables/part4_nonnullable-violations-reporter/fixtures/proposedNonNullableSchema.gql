@@ -1,0 +1,54 @@
+directive @proposedNonNullable on FIELD_DEFINITION | ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION | QUERY | MUTATION
+
+type Query {
+  nullableResponse: Response
+  nonNullableResponse: Response @proposedNonNullable
+}
+
+type Mutation {
+  nonNullableString: String @proposedNonNullable
+}
+
+type Response {
+  nullableField: String
+  proposedNonNullableField: String @proposedNonNullable
+  union: [Union] @proposedNonNullable
+  interface: Interface
+}
+
+type UnionType1 {
+  name: String @proposedNonNullable
+}
+
+type UnionType2 {
+  name: String
+  proposedNonNullableField: String @proposedNonNullable
+}
+
+union Union = UnionType1 | UnionType2
+
+interface Interface {
+  # This field is only @proposedNonNullable on one of the implementing
+  # types, and in the absense of __typename we don't know whether it's
+  # allowed to be null or not, so we should add it as a possible violation
+  possibleNonNullableField: String
+  # This field is @proposedNonNullable for InterfaceType1 and non-nullable
+  # for InterfaceType2. Therefore the plugin should declare it as a definite
+  # violation
+  definiteNonNullableField: String
+  # This field is only @proposedNonNullable on the interface, not the
+  # implementing types. This is so we can safely update interfaces
+  proposedNonNullableInterfaceField: String @proposedNonNullable
+}
+
+type InterfaceType1 implements Interface {
+  possibleNonNullableField: String @proposedNonNullable
+  definiteNonNullableField: String @proposedNonNullable
+  proposedNonNullableInterfaceField: String
+}
+
+type InterfaceType2 implements Interface {
+  possibleNonNullableField: String
+  definiteNonNullableField: String!
+  proposedNonNullableInterfaceField: String
+}

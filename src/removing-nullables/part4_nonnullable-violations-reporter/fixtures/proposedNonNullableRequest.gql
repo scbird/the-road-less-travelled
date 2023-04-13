@@ -1,0 +1,44 @@
+query nullableResponse {
+  nullableResponse {
+    ...ResponseFields
+  }
+}
+
+query nonNullableResponse {
+  nonNullableResponse {
+    ...ResponseFields
+  }
+}
+
+fragment ResponseFields on Response {
+  nullableField
+  proposedNonNullableField
+  union {
+    ...UnionFragment
+  }
+  unionAlias: union {
+    ...UnionFragment
+  }
+  interface {
+    # We don't request __typename on the interface so that the
+    # code doesn't know what concrete type it is
+    possibleNonNullableField
+    definiteNonNullableField
+    proposedNonNullableInterfaceField
+  }
+}
+
+fragment UnionFragment on Union {
+  # In most cases, __typename will be requested by the client, so
+  # the reporter should use it to narrow down the possible types of
+  # each field
+  __typename
+
+  ... on UnionType1 {
+    name
+  }
+  ... on UnionType2 {
+    name
+    proposedNonNullableField
+  }
+}
