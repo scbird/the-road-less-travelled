@@ -60,7 +60,9 @@ export function getProposedNonNullableViolations(
     const values = isArray ? value : [value]
     const possibleNodeTypes = possibleConcreteParents
       .map(getParentField(branchNode))
-      .filter((value): value is GraphQLField<any, any> => Boolean(value))
+      .filter((value): value is GraphQLField<unknown, unknown> =>
+        Boolean(value)
+      )
       .map(prop('type'))
       .map(getBaseType)
       .filter(anyPass([isObjectType, isAbstractType]))

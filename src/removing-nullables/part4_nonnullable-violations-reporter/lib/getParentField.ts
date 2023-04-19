@@ -9,6 +9,6 @@ export function getParentField(
   fieldNode: FieldNode
 ): (
   parent: GraphQLObjectType | GraphQLInterfaceType
-) => GraphQLField<any, any> | undefined {
+) => GraphQLField<unknown, unknown> | undefined {
   return (parent) => parent.getFields()[fieldNode.name.value]
 }
