@@ -7,7 +7,7 @@ import {
 import { getOperations } from '../../lib'
 import { logProposedNonNullableViolations } from './lib'
 
-export class RequestLogger implements ApolloServerPlugin {
+export class ProposedNonNullableViolationsLogger implements ApolloServerPlugin {
   async requestDidStart(): Promise<
     GraphQLRequestListener<GraphQLRequestContext<BaseContext>>
   > {
@@ -22,7 +22,11 @@ export class RequestLogger implements ApolloServerPlugin {
 
         const operations = getOperations(requestContext)
         operations.forEach((operation) =>
-          logProposedNonNullableViolations(requestContext, operation)
+          logProposedNonNullableViolations(
+            requestContext,
+            operation,
+            responseBody.singleResult
+          )
         )
       }
     }
