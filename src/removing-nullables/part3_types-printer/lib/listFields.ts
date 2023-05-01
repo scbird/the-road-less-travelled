@@ -1,7 +1,7 @@
 import { GraphQLRequestContext, BaseContext } from '@apollo/server'
-import { GraphQLObjectType, isObjectType } from 'graphql'
+import { GraphQLObjectType, isAbstractType, isObjectType } from 'graphql'
 import { FieldNode, SelectionSetNode } from 'graphql/language'
-import { groupBy, prop, uniqBy } from 'ramda'
+import { anyPass, groupBy, prop, uniqBy } from 'ramda'
 import { getBaseType, getDataProperty, getPossibleTypes } from '../../../lib'
 import { getFields } from './getFields'
 import { RequestedPathDetails } from './types'
@@ -31,8 +31,8 @@ export function listFields(
     const possibleNodeTypes = allPossibleFieldsByName[branchNode.name.value]
       .map(prop('type'))
       .map(getBaseType)
+      .filter(anyPass([isAbstractType, isObjectType]))
       .flatMap(getPossibleTypes(requestContext))
-      .filter(isObjectType)
     const uniquePossibleNodeTypes = uniqBy(prop('name'), possibleNodeTypes)
     const childPathDetails = listFields(
       requestContext,

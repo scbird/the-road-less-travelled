@@ -4,7 +4,6 @@ import {
   GraphQLField,
   GraphQLObjectType,
   isAbstractType,
-  isInterfaceType,
   isObjectType
 } from 'graphql'
 import { FieldNode, SelectionSetNode } from 'graphql/language'
@@ -25,13 +24,9 @@ export function getProposedNonNullableViolations(
   path: readonly string[] = [],
   data: Record<string, unknown>
 ): ProposedNonNullableViolation[] {
-  const allPossibleParents = possibleParents.flatMap(
-    getPossibleTypes(requestContext, true)
-  )
-  const possibleConcreteParents = allPossibleParents
-    .filter(isObjectType)
+  const allPossibleParents = possibleParents
+    .flatMap(getPossibleTypes(requestContext))
     .filter(isPossibleParent(requestContext, data))
-  const possibleInterfaceParents = allPossibleParents.filter(isInterfaceType)
   const fieldNodes = selectionSet.selections
     .flatMap((selection) => getFields(requestContext, selection))
     .filter(isPossibleField(requestContext, data))
@@ -58,7 +53,7 @@ export function getProposedNonNullableViolations(
     const value = data[dataProperty]
     const isArray = Array.isArray(value)
     const values = isArray ? value : [value]
-    const possibleNodeTypes = possibleConcreteParents
+    const possibleNodeTypes = allPossibleParents
       .map(getParentField(branchNode))
       .filter((value): value is GraphQLField<unknown, unknown> =>
         Boolean(value)
@@ -88,14 +83,12 @@ export function getProposedNonNullableViolations(
   function processLeafNode(
     leafNode: FieldNode
   ): ProposedNonNullableViolation[] {
-    const isProposedNonNullable = [
-      ...possibleInterfaceParents,
-      ...possibleConcreteParents
-    ].some(fieldIsProposedNonNullable(leafNode))
-    const violationsAreDefinite =
-      !possibleConcreteParents.some(valueCanBeNull(leafNode)) ||
-      (possibleInterfaceParents.length > 0 &&
-        !possibleInterfaceParents.some(valueCanBeNull(leafNode)))
+    const isProposedNonNullable = allPossibleParents.some(
+      fieldIsProposedNonNullable(leafNode)
+    )
+    const violationsAreDefinite = !allPossibleParents.some(
+      valueCanBeNull(leafNode)
+    )
 
     if (!isProposedNonNullable) {
       return []

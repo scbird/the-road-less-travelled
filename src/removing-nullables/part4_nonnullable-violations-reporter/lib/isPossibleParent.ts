@@ -11,9 +11,7 @@ export function isPossibleParent(
     return always(true)
   } else {
     return (parent) => {
-      const possibleParentTypes = getPossibleTypes(requestContext)(
-        parent
-      ) as GraphQLObjectType[]
+      const possibleParentTypes = getPossibleTypes(requestContext)(parent)
 
       return possibleParentTypes.some(
         (possibleType) => possibleType.name === data.__typename

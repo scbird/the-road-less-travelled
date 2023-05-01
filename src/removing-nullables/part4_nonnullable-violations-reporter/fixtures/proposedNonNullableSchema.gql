@@ -1,8 +1,16 @@
 directive @proposedNonNullable on FIELD_DEFINITION | ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION | QUERY | MUTATION
 
+input ResponseInput {
+  int: Int
+  float: Float
+  string: String
+  input: ResponseInput
+  list: [ResponseInput!]
+}
+
 type Query {
-  nullableResponse: Response
-  nonNullableResponse: Response @proposedNonNullable
+  nullableResponse(input: ResponseInput): Response
+  nonNullableResponse(input: ResponseInput): Response @proposedNonNullable
 }
 
 type Mutation {
@@ -36,19 +44,14 @@ interface Interface {
   # for InterfaceType2. Therefore the plugin should declare it as a definite
   # violation
   definiteNonNullableField: String
-  # This field is only @proposedNonNullable on the interface, not the
-  # implementing types. This is so we can safely update interfaces
-  proposedNonNullableInterfaceField: String @proposedNonNullable
 }
 
 type InterfaceType1 implements Interface {
   possibleNonNullableField: String @proposedNonNullable
   definiteNonNullableField: String @proposedNonNullable
-  proposedNonNullableInterfaceField: String
 }
 
 type InterfaceType2 implements Interface {
   possibleNonNullableField: String
   definiteNonNullableField: String!
-  proposedNonNullableInterfaceField: String
 }

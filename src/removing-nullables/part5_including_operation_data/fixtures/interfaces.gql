@@ -1,0 +1,20 @@
+directive @proposedNonNullable on FIELD_DEFINITION | ARGUMENT_DEFINITION | INPUT_FIELD_DEFINITION | QUERY | MUTATION
+
+interface Person {
+    name: String @proposedNonNullable
+    age: Int @proposedNonNullable
+}
+
+type Author implements Person {
+    name: String
+    age: Int!
+}
+
+type Director implements Person {
+    name: String @proposedNonNullable
+    age: Int @proposedNonNullable
+}
+
+type Query {
+    people: [Person]
+}

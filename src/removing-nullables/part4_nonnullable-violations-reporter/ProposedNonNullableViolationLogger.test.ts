@@ -9,7 +9,7 @@ import { resolve } from 'path'
 import { pino } from 'pino'
 import { ProposedNonNullableViolationsLogger } from './ProposedNonNullableViolationsLogger'
 
-describe('ProposedNonNUllableViolationReporter', () => {
+describe('ProposedNonNullableViolationReporter', () => {
   const logger = pino({ enabled: false })
   const resolvers = {
     nullableResponse: jest.fn(),
@@ -41,7 +41,7 @@ describe('ProposedNonNUllableViolationReporter', () => {
     jest.resetAllMocks()
   })
 
-  it('blah', async () => {
+  it('should report violations', async () => {
     resolvers.nonNullableResponse.mockResolvedValue({})
 
     await apolloServer.executeOperation({
