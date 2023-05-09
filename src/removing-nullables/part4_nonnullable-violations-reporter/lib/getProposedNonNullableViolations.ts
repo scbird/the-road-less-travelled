@@ -42,13 +42,13 @@ export function getProposedNonNullableViolations(
     .map(prop('fieldNode'))
     .filter((fieldNode) => fieldNode.name.value !== '__typename')
   const fieldNodesByDataProperty = groupBy(getDataProperty, fieldNodes)
+  const uniqueFieldNodes = Object.values(fieldNodesByDataProperty).map(
+    head
+  ) as FieldNode[]
   const selectionSetsByDataProperty = mapObjIndexed(
     getCombinedSelectionSet,
     fieldNodesByDataProperty
   )
-  const uniqueFieldNodes = Object.values(fieldNodesByDataProperty).map(
-    head
-  ) as FieldNode[]
   const uniqueBranchNodes = uniqueFieldNodes.filter(
     (fieldNode) =>
       selectionSetsByDataProperty[getDataProperty(fieldNode)].selections.length
