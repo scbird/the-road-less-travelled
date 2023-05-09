@@ -7,9 +7,18 @@ import {
   isObjectType
 } from 'graphql'
 import { FieldNode, SelectionSetNode } from 'graphql/language'
-import { anyPass, isNil, prop, uniqBy } from 'ramda'
+import {
+  anyPass,
+  groupBy,
+  head,
+  isNil,
+  mapObjIndexed,
+  prop,
+  uniqBy
+} from 'ramda'
 import { getBaseType, getDataProperty, getPossibleTypes } from '../../../lib'
 import { fieldIsProposedNonNullable } from './fieldIsProposedNonNullable'
+import { getCombinedSelectionSet } from './getCombinedSelectionSet'
 import { getFields } from './getFields'
 import { getParentField } from './getParentField'
 import { isPossibleField } from './isPossibleField'
@@ -32,14 +41,22 @@ export function getProposedNonNullableViolations(
     .filter(isPossibleField(requestContext, data))
     .map(prop('fieldNode'))
     .filter((fieldNode) => fieldNode.name.value !== '__typename')
-  const uniqueFieldNodes = uniqBy(getDataProperty, fieldNodes)
-  const branchNodes = uniqueFieldNodes.filter(
-    (fieldNode) => fieldNode.selectionSet
+  const fieldNodesByDataProperty = groupBy(getDataProperty, fieldNodes)
+  const selectionSetsByDataProperty = mapObjIndexed(
+    getCombinedSelectionSet,
+    fieldNodesByDataProperty
+  )
+  const uniqueFieldNodes = Object.values(fieldNodesByDataProperty).map(
+    head
+  ) as FieldNode[]
+  const uniqueBranchNodes = uniqueFieldNodes.filter(
+    (fieldNode) =>
+      selectionSetsByDataProperty[getDataProperty(fieldNode)].selections.length
   )
 
   return [
     ...uniqueFieldNodes.flatMap(getNodeViolations),
-    ...branchNodes.flatMap(processBranchNode)
+    ...uniqueBranchNodes.flatMap(processBranchNode)
   ]
 
   function processBranchNode(
@@ -66,7 +83,7 @@ export function getProposedNonNullableViolations(
           ...getProposedNonNullableViolations(
             requestContext,
             uniquePossibleNodeTypes,
-            branchNode.selectionSet as SelectionSetNode,
+            selectionSetsByDataProperty[dataProperty],
             [...path, isArray ? `${dataProperty}[${idx}]` : dataProperty],
             item as Record<string, unknown>
           )

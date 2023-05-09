@@ -152,6 +152,20 @@ describe('getProposedNonNullableViolations', () => {
           isDefinite: true
         }
       ]
+    ],
+    [
+      'combinedSelectionSets',
+      { interface: {} },
+      [
+        {
+          path: 'combinedSelectionSets.interface.definiteNonNullableField',
+          isDefinite: true
+        },
+        {
+          path: 'combinedSelectionSets.interface.possibleNonNullableField',
+          isDefinite: false
+        }
+      ]
     ]
   ])(
     'should correctly return the violation (%s: %p)',

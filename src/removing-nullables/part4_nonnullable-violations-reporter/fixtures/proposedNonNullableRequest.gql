@@ -10,6 +10,17 @@ query nonNullableResponse {
   }
 }
 
+query combinedSelectionSets {
+  combinedSelectionSets: nonNullableResponse {
+    interface {
+      possibleNonNullableField
+    }
+    interface {
+      definiteNonNullableField
+    }
+  }
+}
+
 fragment ResponseFields on Response {
   nullableField
   proposedNonNullableField
@@ -24,7 +35,6 @@ fragment ResponseFields on Response {
     # code doesn't know what concrete type it is
     possibleNonNullableField
     definiteNonNullableField
-    proposedNonNullableInterfaceField
   }
 }
 
