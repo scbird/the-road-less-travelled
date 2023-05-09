@@ -36,19 +36,15 @@ export function getProposedNonNullableViolations(
   const branchNodes = uniqueFieldNodes.filter(
     (fieldNode) => fieldNode.selectionSet
   )
-  const leafNodes = uniqueFieldNodes.filter(
-    (fieldNode) => !fieldNode.selectionSet
-  )
 
   return [
-    ...branchNodes.flatMap(processBranchNode),
-    ...leafNodes.flatMap(processLeafNode)
+    ...uniqueFieldNodes.flatMap(getNodeViolations),
+    ...branchNodes.flatMap(processBranchNode)
   ]
 
   function processBranchNode(
     branchNode: FieldNode
   ): ProposedNonNullableViolation[] {
-    const violations = processLeafNode(branchNode)
     const dataProperty = getDataProperty(branchNode)
     const value = data[dataProperty]
     const isArray = Array.isArray(value)
@@ -62,6 +58,7 @@ export function getProposedNonNullableViolations(
       .map(getBaseType)
       .filter(anyPass([isObjectType, isAbstractType]))
     const uniquePossibleNodeTypes = uniqBy(prop('name'), possibleNodeTypes)
+    const violations: ProposedNonNullableViolation[] = []
 
     values.forEach((item, idx) => {
       if (!isNil(item)) {
@@ -80,7 +77,7 @@ export function getProposedNonNullableViolations(
     return violations
   }
 
-  function processLeafNode(
+  function getNodeViolations(
     leafNode: FieldNode
   ): ProposedNonNullableViolation[] {
     const isProposedNonNullable = allPossibleParents.some(
