@@ -6,9 +6,13 @@ import {
 } from '@apollo/server'
 import { GraphQLServerContext } from '@apollo/server/dist/esm/externalTypes/plugins'
 import { GraphQLError } from 'graphql/error'
-import { getOperations } from '../../lib'
+import { getOperations } from '../lib'
 import { checkInterfaces, logProposedNonNullableViolations } from './lib'
 
+/**
+ * An Apollo Server plugin that reports violations of the @proposedNonNullable directive
+ * with extra details about the requested operations.
+ */
 export class ProposedNonNullableViolationsLogger implements ApolloServerPlugin {
   async serverWillStart({ schema }: GraphQLServerContext) {
     const problems = checkInterfaces(schema)

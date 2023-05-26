@@ -4,7 +4,7 @@ import { makeExecutableSchema } from '@graphql-tools/schema'
 import { GraphQLObjectType, OperationDefinitionNode } from 'graphql'
 import { resolve } from 'path'
 import { ascend, prop } from 'ramda'
-import { getOperationParentType, getOperations } from '../../../lib'
+import { getOperationParentType, getOperations } from '../../lib'
 import { getProposedNonNullableViolations } from './getProposedNonNullableViolations'
 
 describe('getProposedNonNullableViolations', () => {

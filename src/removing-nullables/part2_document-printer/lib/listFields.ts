@@ -1,6 +1,6 @@
 import { BaseContext, GraphQLRequestContext } from '@apollo/server'
 import { FieldNode, SelectionSetNode } from 'graphql/language'
-import { getDataProperty } from '../../../lib'
+import { getDataProperty } from '../../lib'
 import { getFields } from './getFields'
 
 export function listFields(

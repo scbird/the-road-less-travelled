@@ -3,7 +3,7 @@ import { GraphQLObjectType } from 'graphql'
 import { FormattedExecutionResult } from 'graphql/execution/execute'
 import { OperationDefinitionNode } from 'graphql/language'
 import { partition, prop, propEq } from 'ramda'
-import { getOperationParentType } from '../../../lib'
+import { getOperationParentType } from '../../lib'
 import { getProposedNonNullableViolations } from '../../part4_nonnullable-violations-reporter'
 import { normalizeOperation } from './normalizeOperation'
 

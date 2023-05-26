@@ -32,11 +32,14 @@ function getInterfaceFieldProblems(
   schema: GraphQLSchema,
   interfaceType: GraphQLInterfaceType
 ): (field: GraphQLField<unknown, unknown>) => string[] {
-  const implementations = Object.values(
-    schema.getImplementations(interfaceType)
-  ).flat()
+  const implementations = schema.getImplementations(interfaceType)
+  const allImplementations = [
+    ...implementations.objects,
+    ...implementations.interfaces
+  ]
 
-  return (field) => getProblemsForField(interfaceType, implementations, field)
+  return (field) =>
+    getProblemsForField(interfaceType, allImplementations, field)
 }
 
 function getProblemsForField(

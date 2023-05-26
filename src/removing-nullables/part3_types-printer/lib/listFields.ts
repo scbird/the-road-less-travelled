@@ -2,7 +2,7 @@ import { GraphQLRequestContext, BaseContext } from '@apollo/server'
 import { GraphQLObjectType, isAbstractType, isObjectType } from 'graphql'
 import { FieldNode, SelectionSetNode } from 'graphql/language'
 import { anyPass, groupBy, prop, uniqBy } from 'ramda'
-import { getBaseType, getDataProperty, getPossibleTypes } from '../../../lib'
+import { getBaseType, getDataProperty, getPossibleTypes } from '../../lib'
 import { getFields } from './getFields'
 import { RequestedPathDetails } from './types'
 

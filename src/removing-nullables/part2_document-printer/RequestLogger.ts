@@ -4,9 +4,14 @@ import {
   GraphQLRequestContext,
   GraphQLRequestListener
 } from '@apollo/server'
-import { getOperations } from '../../lib'
+import { getOperations } from '../lib'
 import { logOperationFields } from './lib'
 
+/**
+ * A simple Apollo Server plugin that reports the fields requested by each operation.
+ * See https://scbird.hashnode.dev/creating-a-simple-apollo-server-plugin for more
+ * details
+ */
 export class RequestLogger implements ApolloServerPlugin {
   async requestDidStart(): Promise<
     GraphQLRequestListener<GraphQLRequestContext<BaseContext>>

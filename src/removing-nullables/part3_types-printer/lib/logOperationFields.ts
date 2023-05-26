@@ -2,7 +2,7 @@ import { BaseContext, GraphQLRequestContext } from '@apollo/server'
 import { GraphQLObjectType } from 'graphql'
 import { OperationDefinitionNode } from 'graphql/language'
 import { groupBy, prop, uniq } from 'ramda'
-import { getOperationParentType } from '../../../lib'
+import { getOperationParentType } from '../../lib'
 import { listFields } from './listFields'
 import { RequestedPathDetails } from './types'
 

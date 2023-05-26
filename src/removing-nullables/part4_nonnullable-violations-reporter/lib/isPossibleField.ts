@@ -1,7 +1,7 @@
 import { BaseContext, GraphQLRequestContext } from '@apollo/server'
 import { GraphQLAbstractType } from 'graphql'
 import { GraphQLObjectType } from 'graphql/type/definition'
-import { getPossibleTypes } from '../../../lib'
+import { getPossibleTypes } from '../../lib'
 import { RequestedField } from './getFields'
 import { isPossibleParent } from './isPossibleParent'
 

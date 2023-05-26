@@ -4,9 +4,12 @@ import {
   GraphQLRequestContext,
   GraphQLRequestListener
 } from '@apollo/server'
-import { getOperations } from '../../lib'
+import { getOperations } from '../lib'
 import { logProposedNonNullableViolations } from './lib'
 
+/**
+ * An Apollo Server plugin that reports violations of the @proposedNonNullable directive
+ */
 export class ProposedNonNullableViolationsLogger implements ApolloServerPlugin {
   async requestDidStart(): Promise<
     GraphQLRequestListener<GraphQLRequestContext<BaseContext>>

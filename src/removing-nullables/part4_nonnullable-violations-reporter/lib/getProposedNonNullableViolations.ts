@@ -16,7 +16,7 @@ import {
   prop,
   uniqBy
 } from 'ramda'
-import { getBaseType, getDataProperty, getPossibleTypes } from '../../../lib'
+import { getBaseType, getDataProperty, getPossibleTypes } from '../../lib'
 import { fieldIsProposedNonNullable } from './fieldIsProposedNonNullable'
 import { getCombinedSelectionSet } from './getCombinedSelectionSet'
 import { getFields } from './getFields'

@@ -5,7 +5,7 @@ import { DocumentNode } from 'graphql/language'
 import { GraphQLObjectType } from 'graphql/type/definition'
 import { resolve } from 'path'
 import { ascend, prop, uniq } from 'ramda'
-import { getOperationParentType, getOperations } from '../../../lib'
+import { getOperationParentType, getOperations } from '../../lib'
 import { listFields } from './listFields'
 
 test('listFields()', async () => {
