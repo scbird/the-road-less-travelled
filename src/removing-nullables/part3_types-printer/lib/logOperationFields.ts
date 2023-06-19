@@ -23,7 +23,11 @@ export function logOperationFields(
   const uniqRequestedPaths = Object.values(requestedPathsByPath).map(
     (requestedPaths) => ({
       path: requestedPaths[0].path,
-      possibleTypes: uniq(requestedPaths.flatMap(prop('type')))
+      possibleTypes: uniq(
+        requestedPaths.flatMap((pathDetails) =>
+          pathDetails.possibleFields.map(prop('type'))
+        )
+      )
     })
   )
 
