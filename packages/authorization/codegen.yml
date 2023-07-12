@@ -1,0 +1,15 @@
+overwrite: true
+schema: 'src/services/gateway/graphql/schema.gql'
+generates:
+  src/services/gateway/graphql/graphql.ts:
+    plugins:
+      - 'typescript'
+      - 'typescript-resolvers'
+    config:
+      contextType: '../types#RequestContext'
+      mappers:
+        Organization: '@prisma/client#Organization'
+        Post: '@prisma/client#Post'
+        Team: '@prisma/client#Team'
+        User: '@prisma/client#User'
+      mapperTypeSuffix: 'Model'

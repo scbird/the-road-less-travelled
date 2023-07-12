@@ -2,6 +2,9 @@
   "compileOnSave": false,
   "compilerOptions": {
     "strict": true,
+    "types": ["jest"],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
   "exclude": ["node_modules", "tmp"]
 }
