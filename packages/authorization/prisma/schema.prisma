@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Organization {
+  id        String                  @id @default(cuid())
+  name      String
+  userRoles UserOrganizationRoles[]
+  teams     Team[]
+}
+
+model Team {
+  id             String          @id @default(cuid())
+  name           String
+  organizationId String
+  organization   Organization    @relation(fields: [organizationId], references: [id])
+  userRoles      UserTeamRoles[]
+  posts          Post[]
+}
+
+model UserOrganizationRoles {
+  user           User         @relation(fields: [userId], references: [id])
+  userId         String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String
+  roles          OrgRole[]
+
+  @@unique([userId, organizationId])
+}
+
+model UserTeamRoles {
+  user   User       @relation(fields: [userId], references: [id])
+  userId String
+  team   Team       @relation(fields: [teamId], references: [id])
+  teamId String
+  roles  TeamRole[]
+
+  @@unique([userId, teamId])
+}
+
+model User {
+  id           String                  @id @default(cuid())
+  email        String                  @unique
+  passwordHash String
+  name         String?
+  orgRoles     UserOrganizationRoles[]
+  teamRoles    UserTeamRoles[]
+  // Posts that this user has authored
+  ownPosts     Post[]                  @relation("OwnPosts")
+  siteRoles    SiteRole[]              @default([])
+}
+
+model Post {
+  id         String   @id @default(cuid())
+  title      String
+  content    String   @default("")
+  published  Boolean  @default(false)
+  author     User     @relation("OwnPosts", fields: [authorId], references: [id])
+  authorId   String
+  team       Team     @relation(fields: [teamId], references: [id])
+  teamId     String
+  // The IDs of the user the post has been shared with
+  sharedWith String[]
+}
+
+enum SiteRole {
+  ADMIN
+}
+
+enum OrgRole {
+  ADMIN
+  MEMBER
+}
+
+enum TeamRole {
+  ADMIN
+  SUBMITTER
+  VIEWER
+}

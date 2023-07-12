@@ -1,0 +1,295 @@
+type Organization {
+  """
+  The ID of the organisation
+  """
+  id: ID!
+
+  """
+  The name of the organisation
+  """
+  name: String!
+
+  """
+  The teams that belong to the organisation
+  """
+  teams: [Team!]!
+}
+
+type Team {
+  """
+  The ID of the team
+  """
+  id: ID!
+
+  """
+  The name of the organisation
+  """
+  name: String!
+
+  """
+  The organisation the team belongs to
+  """
+  organization: Organization!
+
+  """
+  The posts owned by the team
+  """
+  posts: [Post!]!
+}
+
+type User {
+  """
+  The ID of the user
+  """
+  id: ID!
+
+  """
+  The email address of the user
+  """
+  email: String!
+
+  """
+  The name of the user
+  """
+  name: String!
+}
+
+type Post {
+  """
+  The ID of the post
+  """
+  id: ID!
+
+  """
+  The post's title
+  """
+  title: String!
+
+  """
+  The content of the post
+  """
+  content: String!
+
+  """
+  True if the post has been published and is thus visible to all team members
+  """
+  published: Boolean!
+
+  """
+  The person that wrote the post
+  """
+  author: User!
+
+  """
+  The team the post belongs to
+  """
+  team: Team!
+
+  """
+  Who the post has been shared with
+  """
+  sharedWith: [User!]!
+}
+
+type Query {
+  """
+  Lists the organisations that the logged-in user is a member of
+  """
+  organizations: [Organization!]!
+
+  """
+  Lists the posts that are visible to the logged-in user
+  """
+  posts: [Post!]!
+
+  """
+  Lists the teams the logged-in user is a member of
+  """
+  teams: [Team!]!
+
+  """
+  Lists the details of the logged in user. Returns null if
+  the user is not logged in
+  """
+  me: User
+}
+
+type Mutation {
+  """
+  Logs the user in, storing a session cookie on their browser. If you
+  find logging in doesn't work, make sure you've enabled cookie sending
+  in the Apollo playground settings. See the README for more details
+  """
+  login(input: LoginInput!): User!
+
+  """
+  Creates a new unpublished post. Unpublished posts are not visible to
+  anyone other than the author and people the post has been shared with
+  """
+  createPost(input: CreatePostInput!): Post!
+
+  """
+  Registers a new user. If you find registering doesn't work, make sure
+  you've enabled cookie-sending in the Apollo playground settings. See the
+  README for more details
+  """
+  registerUser(input: RegisterUserInput!): User!
+
+  """
+  Shares a post with one or more users. They will be able to view it even
+  if it hasn't been published yet
+  """
+  sharePost(input: SharePostInput!): Post!
+
+  """
+  Edits the title or content of a post
+  """
+  editPost(input: EditPostInput!): Post!
+
+  """
+  Publishes a post, so that members of the team that the post belongs to
+  are able to see it
+  """
+  publishPost(input: PublishPostInput!): Post!
+
+  """
+  Sets the roles the user has in a given team. Use the teams query to
+  get the IDs of the teams you are in
+  """
+  setTeamRoles(input: SetTeamRolesInput!): User!
+
+  """
+  Sets the roles the user has in a given org. Use the orgs query to get
+  the IDs of the orgs you are in
+  """
+  setOrgRoles(input: SetOrgRolesInput!): User!
+}
+
+input CreatePostInput {
+  """
+  The ID of the team that owns the post
+  """
+  teamId: ID!
+
+  """
+  The title of the post
+  """
+  title: String!
+
+  """
+  The content of the post
+  """
+  content: String = ""
+}
+
+input RegisterUserInput {
+  """
+  The email address of the user to register
+  """
+  email: String!
+
+  """
+  The user's password
+  """
+  password: String!
+
+  """
+  The name of the user to register
+  """
+  name: String!
+}
+
+input EditPostInput {
+  """
+  The ID of the post to edit
+  """
+  postId: ID!
+
+  """
+  Sets the title of the post. If null, the post's title will not be changed
+  """
+  title: String
+
+  """
+  Sets the content of the post. If null, the post's content will not be changed
+  """
+  content: String
+}
+
+input SharePostInput {
+  """
+  The ID of the post to share
+  """
+  postId: ID!
+
+  """
+  The email addresses of the users to share the post with
+  """
+  userEmails: [String!]!
+}
+
+input PublishPostInput {
+  """
+  The ID of the post to publish
+  """
+  postId: ID!
+}
+
+input SetTeamRolesInput {
+  """
+  The ID of the team to set the user's roles in
+  """
+  teamId: ID!
+
+  """
+  The email of the user to set the roles of
+  """
+  userEmail: String!
+
+  """
+  The roles that the user should have in the team. This will
+  replace any existing roles they might have
+  """
+  roles: [TeamRole!]!
+}
+
+input SetOrgRolesInput {
+  """
+  The ID of the org to set the user's roles in
+  """
+  orgId: ID!
+
+  """
+  The email of the user to set the roles of
+  """
+  userEmail: String!
+
+  """
+  The roles that the user should have in the team. This will
+  replace any existing roles they might have
+  """
+  roles: [OrgRole!]!
+}
+
+input LoginInput {
+  """
+  The email address of the user to log in as
+  """
+  email: String!
+
+  """
+  The password of the user to log in as
+  """
+  password: String!
+}
+
+enum OrgRole {
+  ADMIN
+  MEMBER
+}
+
+enum TeamRole {
+  ADMIN
+  SUBMITTER
+  VIEWER
+}

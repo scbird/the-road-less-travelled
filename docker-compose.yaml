@@ -1,0 +1,17 @@
+version: "3"
+services:
+  database:
+    image: postgres:13
+    environment:
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_PASSWORD=postgres"
+      - "POSTGRES_DB=postgres"
+    ports:
+      - "20010:5432"
+    volumes:
+      - database-data:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready
+
+volumes:
+  database-data: ~
