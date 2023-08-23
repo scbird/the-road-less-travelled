@@ -8,6 +8,9 @@ This repository contains the code for the articles published on [The road less t
 
 An [Apollo Server](https://www.apollographql.com/docs/apollo-server/) plugin to help safely fix a schema with many unnecessarily nullable fields. See the [Removing nullables](https://scbird.hashnode.dev/series/removing-nullables) blog series for more information. 
 
+### [User authorisation](./packages/authorization)
+
+An example app showing how to set up user authorisation in your own project. See the [User authorisation](https://scbird.hashnode.dev/series/user-authorisation) blog series for more information. 
 
 ## License
 
